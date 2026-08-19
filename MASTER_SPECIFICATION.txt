@@ -1,0 +1,480 @@
+MASTER SPECIFICATION
+Financial Excel Dashboard Project
+
+حالة الوثيقة: مواصفة مرجعية للقالب
+قاعدة: القالب هو المرجع المطلق.
+النطاق: توصيف ما هو موجود فقط، دون إعادة تصميم أو إضافة منطق.
+
+1. بنية المصنف
+
+القالب يحتوي على 8 أوراق بالترتيب التالي:
+
+1) DashBoard — واجهة Dashboard النهائية
+2) Company Financials (Dataset) — مصدر البيانات الرئيسي
+3) COGS — تحليل COGS حسب المنتج
+4) Manufacturing Price,Sales — مقارنة سعر البيع والتصنيع حسب المنتج
+5) Unites Sold — توزيع الوحدات المباعة حسب المنتج
+6) Net Sales — تحليل صافي المبيعات حسب الدولة
+7) KPIs — مؤشرات KPI المجمعة
+8) Profit — تحليل الربح حسب الدولة
+
+2. الورقة: DashBoard
+
+النطاق المستخدم:
+D4:T52
+
+العناصر الرئيسية:
+- Profit
+- COGS
+- Net Sales
+- Units Sold
+- Discounts
+
+المعادلات الموجودة:
+E6 = GETPIVOTDATA(" Profit ",KPIs!$A$3)
+I6 = GETPIVOTDATA(" COGS ",KPIs!$A$8)
+M6 = GETPIVOTDATA("  Net Sales ",KPIs!$A$13)
+O5 = GETPIVOTDATA(" Units Sold ",KPIs!$A$18)
+S6 = GETPIVOTDATA(" Discounts ",KPIs!$A$23)
+
+الرسومات:
+1. Profit
+2. Net Sales
+3. Units Sold
+4. Average Sale Price + Manufacturing Price
+5. COGS
+
+مواقع الرسومات التقريبية:
+- Chart 1: D9:M26
+- Chart 2: M9:T26
+- Chart 3: D27:H43
+- Chart 4: I27:N43
+- Chart 5: O27:T43
+
+3. الورقة: Company Financials (Dataset)
+
+النطاق:
+A1:Q701
+
+الجدول الرئيسي:
+Table1
+
+الحقول الأصلية:
+A Segment
+B Country
+C Product
+D Discount Band
+E Units Sold
+F Manufacturing Price
+G Sale Price
+H Gross Sales
+I Discounts
+J Net Sales
+K COGS
+L Profit
+M Date
+N Month Number
+O Month Name
+P Year
+
+طبيعة الورقة:
+هذه هي نواة البيانات في القالب ومصدر البيانات الرئيسي للـ Pivot Cache.
+
+البيانات القابلة للاستبدال:
+محتوى Table1 يمكن استبداله ببيانات شركة جديدة بشرط الحفاظ على بنية الحقول ومعانيها وأنواعها والعلاقات اللازمة للـ Pivot Tables والـ Dashboard.
+
+لا يجوز اختراع بيانات للحقول غير المتوفرة.
+
+4. الورقة: COGS
+
+النطاق:
+A2:C10
+
+الجدول:
+- Row Labels
+- Sum of COGS
+
+المنتجات:
+Amarilla
+Carretera
+Montana
+Paseo
+Velo
+VTT
+Grand Total
+
+الوظيفة:
+إجمالي COGS حسب Product.
+
+مصدر البيانات:
+Table1
+
+منطق التجميع:
+COGS → SUM
+
+يوجد Chart مرتبط بهذه الورقة.
+
+5. الورقة: Manufacturing Price,Sales
+
+النطاق:
+A2:D9
+
+الحقول:
+- Products
+- Average Sale Price
+- Manufacturing Price
+
+المنتجات:
+Amarilla
+Carretera
+Montana
+Paseo
+Velo
+VTT
+
+منطق Pivot:
+Product
+Sale Price → Average
+Manufacturing Price → Max
+
+الرسم يقارن:
+- Average Sale Price
+- Manufacturing Price
+
+6. الورقة: Unites Sold
+
+اسم الورقة كما هو في القالب:
+Unites Sold
+
+النطاق:
+A2:C10
+
+الحقول:
+- Row Labels
+- Sum of Units Sold
+
+المنتجات:
+Amarilla
+Carretera
+Montana
+Paseo
+Velo
+VTT
+Grand Total
+
+منطق Pivot:
+Units Sold → Percent of Total
+
+يوجد Chart مرتبط بهذه الورقة.
+
+7. الورقة: Net Sales
+
+النطاق:
+A2:C9
+
+الحقول:
+- Row Labels
+- Sum of Net Sales
+
+التصنيف:
+Country
+
+الدول:
+Canada
+France
+Germany
+Mexico
+United States of America
+Grand Total
+
+منطق Pivot:
+Net Sales → SUM
+
+يوجد Chart مرتبط بهذه الورقة.
+
+8. الورقة: KPIs
+
+النطاق:
+A2:B24
+
+هذه منطقة التجميع الخاصة بالـ Dashboard KPI cards.
+
+KPI 1:
+A3 = Sum of Profit
+A4 = القيمة المجمعة
+
+KPI 2:
+A8 = Sum of COGS
+A9 = القيمة المجمعة
+
+KPI 3:
+A13 = Sum of Net Sales
+A14 = القيمة المجمعة
+
+KPI 4:
+A18 = Sum of Units Sold
+A19 = القيمة المجمعة
+
+KPI 5:
+A23 = Sum of Discounts
+A24 = القيمة المجمعة
+
+العلاقة مع Dashboard:
+Dashboard يستدعي هذه القيم عبر GETPIVOTDATA.
+
+9. الورقة: Profit
+
+النطاق:
+A2:C9
+
+الحقول:
+- Row Labels
+- Sum of Profit
+
+التصنيف:
+Country
+
+الدول:
+Canada
+France
+Germany
+Mexico
+United States of America
+Grand Total
+
+منطق Pivot:
+Profit → SUM
+
+يوجد Chart مرتبط بهذه الورقة.
+
+10. Pivot Tables
+
+القالب يحتوي على 10 Pivot Tables.
+
+جميعها تستخدم:
+Pivot Cache 0
+
+ومصدر الـ Cache:
+Table1
+
+الوظائف الأساسية:
+1. Profit حسب Country
+2. Net Sales حسب Country
+3. COGS حسب Product
+4. Average Sale Price + Manufacturing Price حسب Product
+5. Units Sold كنسبة من الإجمالي حسب Product
+6. Units Sold
+7. Discounts
+8. COGS
+9. Net Sales
+10. Profit
+
+11. Pivot Cache
+
+مصدر البيانات المركزي:
+Table1
+
+الحقول المعرفة في الـ Cache:
+1. Segment
+2. Country
+3. Product
+4. Discount Band
+5. Units Sold
+6. Manufacturing Price
+7. Sale Price
+8. Gross Sales
+9. Discounts
+10. Net Sales
+11. COGS
+12. Profit
+13. Date
+14. Month Number
+15. Month Name
+16. Months (Date)
+17. Quarters (Date)
+18. Years (Date)
+
+12. العلاقات المعمارية
+
+Dataset
+→ Table1
+→ Pivot Cache
+→ Pivot Tables / Analytical Sheets
+→ KPIs
+→ Dashboard
+
+العلاقة التفصيلية:
+Dataset
+├── COGS
+├── Manufacturing Price,Sales
+├── Unites Sold
+├── Net Sales
+├── Profit
+└── KPIs
+      ↓
+  DashBoard
+
+13. عناصر Dashboard
+
+KPI Cards:
+1. Profit
+2. COGS
+3. Net Sales
+4. Units Sold
+5. Discounts
+
+Charts:
+1. Profit by Country
+2. Net Sales by Country
+3. Units Sold by Product
+4. Average Sale Price vs Manufacturing Price by Product
+5. COGS by Product
+
+مصدر المؤشرات:
+KPIs ثم GETPIVOTDATA ثم Dashboard.
+
+14. النصوص الإنجليزية القابلة للتعريب
+
+يمكن تعريب النصوص الظاهرة، ومنها:
+DashBoard
+Company Financials (Dataset)
+COGS
+Manufacturing Price,Sales
+Unites Sold
+Net Sales
+KPIs
+Profit
+Segment
+Country
+Product
+Discount Band
+Units Sold
+Manufacturing Price
+Sale Price
+Gross Sales
+Discounts
+Net Sales
+COGS
+Profit
+Date
+Month Number
+Month Name
+Year
+Row Labels
+Grand Total
+Products
+Average Sale Price
+Sum of Profit
+Sum of COGS
+Sum of Net Sales
+Sum of Units Sold
+Sum of Discounts
+
+لكن التعريب لا يعني تغيير أسماء الحقول الداخلية المستخدمة في الصيغ وPivot Cache دون آلية تحافظ على العلاقات.
+
+15. البيانات القابلة للاستبدال
+
+المكوّن الأساسي القابل للاستبدال:
+Company Financials (Dataset)
+
+والجدول:
+Table1
+
+ومنطقة البيانات:
+A2:P701
+
+يمكن استبدال محتوى البيانات ببيانات شركة أخرى عندما تتوافق مع الحقول المطلوبة.
+
+16. البيانات والعناصر التي يجب الحفاظ عليها
+
+يجب الحفاظ على:
+- عدد الأوراق: 8
+- ترتيب الأوراق
+- أسماء الأوراق، ما لم توجد عملية تعريب مضبوطة لا تكسر العلاقات
+- Table1
+- الأعمدة
+- أنواع الحقول
+- علاقات البيانات
+- Pivot Cache
+- Pivot Tables
+- حقول Row/Column
+- حقول Values
+- أنواع التجميع: SUM / AVERAGE / MAX / Percent of Total
+- KPI cards
+- مواقعها
+- Charts
+- مصادر الرسومات
+- علاقات GETPIVOTDATA
+- منطق Dataset → Pivot → KPI → Dashboard
+
+17. عناصر لا يجوز تغييرها وفق MASTER
+
+ممنوع:
+- إنشاء أرقام.
+- تعديل أرقام البيانات الحالية.
+- إضافة KPIs جديدة.
+- حذف KPI.
+- إضافة رسوم.
+- حذف رسوم.
+- تغيير نوع الرسم.
+- تغيير مصادر الرسوم.
+- تغيير Pivot logic.
+- تغيير التجميعات.
+- إضافة معادلات مالية جديدة.
+- استبدال Pivot Tables بمعادلات أخرى.
+- إعادة تصميم Dashboard.
+- إعادة ترتيب الأوراق.
+- تغيير العلاقات بين الأوراق.
+- افتراض بيانات غير موجودة.
+- تحويل البيانات الناقصة إلى أرقام تقديرية.
+
+18. حالة القالب الحالية التي يجب تسجيلها
+
+- بعض قيم Dashboard الناتجة من GETPIVOTDATA تظهر حاليًا #NAME?.
+- ملف XLSX يحتوي على XML خاص بالرسومات يسبب فشل openpyxl في فتح المصنف مباشرة.
+- القالب يحتوي على 10 Pivot Tables.
+- القالب يحتوي على 10 Charts إجمالًا، منها 5 في Dashboard وواحد على كل من الأوراق التحليلية الخمس.
+- توجد تعريفات أسماء مثل:
+  NativeTimeline_Date
+  Slicer_Country
+  Slicer_Product
+  Slicer_Segment
+- بعض هذه التعريفات حاليًا تشير إلى #N/A.
+- Dataset الحالي يحتوي على بيانات من 2013–2014 وفق تعريف Pivot Cache.
+
+هذه الحالات ليست تعديلات؛ بل خصائص يجب أن يعرفها النظام قبل استخدام القالب.
+
+19. MASTER RULE
+
+القالب الحالي ليس نموذجًا ماليًا عامًا من نوع:
+Income Statement
+Balance Sheet
+Cash Flow
+NPV
+IRR
+ROA
+ROE
+
+بل هو قالب Business Sales / Profitability Dashboard قائم على:
+Dataset + Pivot Tables + Charts + KPI aggregation
+
+لذلك لا يجوز إدخال منطق مالي غير موجود فيه تحت مسمى تحسين القالب.
+
+20. المواصفة المعمارية النهائية
+
+CLIENT DATA
+→ Company Financials (Dataset)
+→ Table1
+→ Pivot Cache
+→ Pivot Tables / Analytical Sheets
+→ KPIs
+→ DashBoard
+
+قاعدة التنفيذ النهائية:
+القالب هو المرجع المطلق.
+لا اختراع بيانات.
+لا تغيير للمنطق.
+لا إعادة تصميم.
+لا حذف عناصر.
+لا إضافة عناصر.
+لا تغيير للعلاقات.
